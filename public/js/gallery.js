@@ -53,11 +53,15 @@ class Gallery {
 
     _counter (data) {
         this.views = data.querySelector(".counter")
-        this.views.innerHTML = parseInt (this.views.innerHTML) + 1
         this.xhr = new XMLHttpRequest();
         this.xhr.open ("POST", "index.php", true)
         this.xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded")
         this.serv = "picID=" + data.dataset.id
+        this.xhr.onreadystatechange = () => {
+				if (this.xhr.readyState == 4 && this.xhr.status == 200) {
+                    this.views.innerHTML = parseInt (this.views.innerHTML) + 1
+				}
+        }
         this.xhr.send (this.serv)
     }
 }
