@@ -9,9 +9,9 @@
  * @method _makeCenter выравнивает отображаемое в модальном окне изображение по
  * горизонтали и по вертикали. Затем запускается метод _counter
  * 
- * @method _counter создает cookie, в который значение записывается в виде
- * JSON-строки {"pic_id": "id", "curr_num": "views"}. Cookie уничтожается после
- * закрытия браузера
+ * @method _counter формирует POST-запрос, в котором передает номер просматриваемой
+ * картинки. Содержимое POST-запроса обрабатывается в index.php с помощью функции
+ * updateSQLtable
  * 
  * @method _closeImage выключает отображение модального окна при клике по нему в
  * любом месте
@@ -51,31 +51,14 @@ class Gallery {
         this.window.style.display = "none"
     }
 
-    // Не работает. Пошел путем куков
-    //
-    // _counter (data) {
-    //     this.views = data.querySelector(".counter")
-    //     fetch("engine/post.php", { 
-    //         method: "POST",
-    //         body: "toServer=" + data.dataset.id,   
-    //         headers:{"content-type": "application/x-www-form-urlencoded"} 
-    //         })
-           
-    //     .then( (response) => {
-    //             if (response.status !== 200) {           
-    //                 return Promise.reject();
-    //             }   
-    //     return response.text()
-    //     })
-    //     .then(res => this.views.innerHTML = parseInt (this.views.innerHTML) + 1)
-    //     .catch(() => console.log("Nope")); 
-    // }
-
     _counter (data) {
         this.views = data.querySelector(".counter")
         this.views.innerHTML = parseInt (this.views.innerHTML) + 1
-        this.cookieData = JSON.stringify ({pic_id: data.dataset.id, curr_count: this.views.innerHTML})
-        document.cookie = `pic_viewed = ${this.cookieData}; path=/`
+        this.xhr = new XMLHttpRequest();
+        this.xhr.open ("POST", "index.php", true)
+        this.xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded")
+        this.serv = "picID=" + data.dataset.id
+        this.xhr.send (this.serv)
     }
 }
 

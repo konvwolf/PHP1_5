@@ -2,7 +2,10 @@
 
 include ('.'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'const.php'); // константы сайта
 include (ENGINE_PATH.'func.php'); // функции сайта
-include (ENGINE_PATH.'post.php'); // передача данных в мускуль
+
+if ($picID = $_POST['picID']) {
+    updateSQLtable(PHOTOS, 'counter', 'counter + 1', "WHERE id = $picID");
+}
 
 ?>
 
